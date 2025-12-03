@@ -1,27 +1,8 @@
-// Simple in-memory "database"
+// Simple in-memory "database" in the browser
 let employees = [];
 
 // ONLINE API base
 const API_BASE = "https://ems-backend-dczs.onrender.com";
-
-async function loadEmployeesFromServer() {
-  try {
-    console.log("Fetching employees from server...");
-    const res = await fetch(API_BASE + "/employees");
-    console.log("Response status:", res.status);
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-    const data = await res.json();
-    console.log("Employees loaded:", data);
-    employees = Array.isArray(data) ? data : [];
-    renderAll();
-  } catch (err) {
-    console.error("Error loading employees:", err);
-    employees = [];
-    renderAll();
-  }
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready, initializing...");
@@ -70,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formMsg.style.color = "#22c55e";
         empForm.reset();
 
-        loadEmployeesFromServer();
+        await loadEmployeesFromServer();
       } catch (err) {
         console.error(err);
         formMsg.textContent = "Network error.";
@@ -85,13 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
     searchInput.addEventListener("input", renderAll);
   }
 
-  // Delete employee (frontend-only removal from table)
+  // Expose delete function globally
   window.deleteEmp = function (id) {
     employees = employees.filter(e => e.emp_id !== id);
     renderAll();
   };
 
-  // Render functions
+  // ---------- Render helpers ----------
+
   function renderAll() {
     renderCards();
     renderRecent();
@@ -99,8 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function filteredEmployees() {
-    const searchInputEl = document.getElementById("searchInput");
-    const q = searchInputEl ? searchInputEl.value.trim().toLowerCase() : "";
+    const q = searchInput ? searchInput.value.trim().toLowerCase() : "";
     if (!q) return employees;
     return employees.filter(e =>
       String(e.emp_id).toLowerCase().includes(q) ||
@@ -122,8 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (cardTotal) cardTotal.textContent = total;
     if (cardActive) cardActive.textContent = active;
-    if (cardAvg) cardAvg.textContent =
-      "₹" + Math.round(avg).toLocaleString("en-IN");
+    if (cardAvg) {
+      cardAvg.textContent =
+        "₹" + Math.round(avg).toLocaleString("en-IN");
+    }
   }
 
   function renderRecent() {
@@ -172,6 +155,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Load employees on DOM ready
+  // ---------- Load from backend ----------
+
+  async function loadEmployeesFromServer() {
+    try {
+      console.log("Fetching employees from server...");
+      const res = await fetch(API_BASE + "/employees");
+      console.log("Response status:", res.status);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      console.log("Employees loaded:", data);
+      employees = Array.isArray(data) ? data : [];
+      renderAll();
+    } catch (err) {
+      console.error("Error loading employees:", err);
+      employees = [];
+      renderAll();
+    }
+  }
+
+  // Initial load
   loadEmployeesFromServer();
 });
