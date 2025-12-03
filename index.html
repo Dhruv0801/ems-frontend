@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1 class="logo">EMS</h1>
+      <nav class="nav">
+        <button class="nav__item active" data-section="dashboard">Dashboard</button>
+        <button class="nav__item" data-section="add">Add Employee</button>
+        <button class="nav__item" data-section="list">All Employees</button>
+      </nav>
+      <div class="sidebar__footer">
+        <span class="user-role">Admin Panel</span>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <!-- Top bar -->
+      <header class="topbar">
+        <div>
+          <h2>Employee Management</h2>
+          <p>Manage employees, payroll, and status in one place.</p>
+        </div>
+        <input
+          type="search"
+          id="searchInput"
+          class="search"
+          placeholder="Search by ID or Name..."
+        />
+      </header>
+
+      <!-- Dashboard section -->
+      <section id="dashboard" class="section section--active">
+        <div class="cards">
+          <div class="card">
+            <h3>Total Employees</h3>
+            <p id="cardTotalEmp">0</p>
+          </div>
+          <div class="card">
+            <h3>Active Employees</h3>
+            <p id="cardActiveEmp">0</p>
+          </div>
+          <div class="card">
+            <h3>Avg Net Pay</h3>
+            <p id="cardAvgPay">₹0</p>
+          </div>
+        </div>
+
+        <h3 class="section__title">Recent Employees</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Dept</th>
+              <th>Salary</th>
+              <th>Net Pay</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentEmployees"></tbody>
+        </table>
+      </section>
+
+      <!-- Add employee section -->
+      <section id="add" class="section">
+        <h3 class="section__title">Add New Employee</h3>
+        <form id="empForm" class="form">
+          <div class="form__grid">
+            <label>
+              Employee ID
+              <input type="text" name="emp_id" required />
+            </label>
+            <label>
+              Name
+              <input type="text" name="emp_name" required />
+            </label>
+            <label>
+              Department
+              <input type="text" name="emp_dept" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="emp_email" required />
+            </label>
+            <label>
+              Phone
+              <input type="text" name="emp_phone" maxlength="10" required />
+            </label>
+            <label>
+              Payroll ID
+              <input type="text" name="emp_payroll_id" required />
+            </label>
+            <label>
+              Salary (per month)
+              <input type="number" name="emp_salary" min="0" step="0.01" required />
+            </label>
+            <label>
+              Working Days
+              <input type="number" name="emp_working_days" min="0" max="26" required />
+            </label>
+            <label>
+              Leaves
+              <input type="number" name="emp_leaves" min="0" max="26" required />
+            </label>
+            <label>
+              Bonus
+              <input type="number" name="emp_bonus" min="0" step="0.01" value="0" />
+            </label>
+            <label>
+              Deductions
+              <input type="number" name="emp_deductions" min="0" step="0.01" value="0" />
+            </label>
+            <label class="form__full">
+              Address
+              <input type="text" name="emp_address" />
+            </label>
+            <label>
+              Status
+              <select name="emp_status">
+                <option value="Active">Active</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Resigned">Resigned</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="btn btn--primary">Save Employee</button>
+          <span id="formMsg" class="form__msg"></span>
+        </form>
+      </section>
+
+      <!-- List section -->
+      <section id="list" class="section">
+        <h3 class="section__title">Employees</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Dept</th>
+              <th>Phone</th>
+              <th>Salary</th>
+              <th>Net Pay</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="empTableBody"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
